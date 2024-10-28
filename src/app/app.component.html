@@ -1,0 +1,56 @@
+
+<section class="container">
+
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Simulador Escalonador 2pl</mat-card-title>
+        </mat-card-header>        
+        <mat-card-content>
+            
+            <p>Selecione as transações a serem executadas</p>
+
+            @for (trans of transactions; track $index) {
+                <mat-checkbox color="primary" [(ngModel)]="trans.selected"></mat-checkbox>
+            
+               T{{ trans.id }} - {{ getTransactionStr(trans) }}
+                <br>
+            }            
+            
+            <button mat-raised-button color="primary" style="margin-top: 8px;" (click)="onClick()">Gerar História Inicial</button>
+
+
+        </mat-card-content>
+    </mat-card>
+
+    @if (allExecuted) {
+        <mat-card style="margin-top: 16px;">
+            <mat-card-header>
+                <mat-card-title>Execução</mat-card-title>
+            </mat-card-header>        
+            <mat-card-content>
+                
+                @if (initialHistory.step.length > 0) {
+        
+                    <p>História Inicial</p>
+                    <p>HI - {{ getInitialHistory() }}</p>
+                    
+                }
+                
+                <mat-divider></mat-divider>
+                
+                @if (allExecuted) {
+                
+                    <p style="margin: 16px 0px;">História Final</p>
+                    <p>HF - {{ getFinalHistory() }}</p>                    
+                    
+                }
+    
+            </mat-card-content>
+        </mat-card>    
+    }
+    
+    
+    
+</section>
+
+<router-outlet></router-outlet>
