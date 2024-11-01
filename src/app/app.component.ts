@@ -156,6 +156,7 @@ export class AppComponent {
 
         if (transactions[i].steps.length === 1){ // Se houver apenas um passo remanescente (commit)
           const commit = transactions[i].steps.shift()
+
           if (commit){
             this.initialHistory.step.push({[transactions[i].id]: commit}); // Adiciona o commit ao histórico
             timesIterate++; 
@@ -189,6 +190,7 @@ export class AppComponent {
               // Tenta adquirir bloqueio
               if (!this.acquireLock(transaction, <string>step.variable, step.what === 'r')) {
                 // A transação está em atraso (não conseguiu adquirir o bloqueio)
+              console.log("Colocado em delay " + transaction.id + step.variable);
                 this.executionHistory.push({
                   transactionId: transaction.id,
                   action: ActionType.Delay,
@@ -197,17 +199,24 @@ export class AppComponent {
                 transaction.delay = true
   
               }else {
+                console.log("Realiza o bloqueio: " + step.what + transactionId + stepRecord[transactionId].variable);
                 stepRecord[transactionId].executed = true // Marca o passo como executado
               }
+              console.log("Bloqueios de Id " + transaction.id + ": ");
+              console.log(transaction.locks);
+
             } else if (step.what === 'c') {
               // Libera todos os bloqueios após o commit
+              console.log("Realiza o commit da transação " + transaction.id);
               this.executionHistory.push({
                 transactionId: transaction.id,
                 action: ActionType.Commit,
               });
-  
+              
+              console.log("Libera os bloqueios de Id: " + transaction.id);
               transaction.locks.forEach((variable) => {
                 this.releaseLock(variable); // Libera o bloqueio de cada variável bloqueada
+                console.log("Liberando bloqueio: " + transaction.id + variable);
                 this.cleanDelays(variable); // Limpa os atrasos de outras transações para essa variável
               });
 
@@ -221,6 +230,7 @@ export class AppComponent {
           } else {            
             if(this.transactionsSelected.filter(tr => !tr.committed).every(t => t.delay)){
               // Detecção de deadlock
+              console.log("Identificado deadLock: " + transaction.id);
               this.handleDeadlock();
               this.executionHistory.push({
                 transactionId: transaction.id,
@@ -249,6 +259,8 @@ export class AppComponent {
       if (!step.executed && step.variable === variable) {
         const transaction = this.transactionsSelected.find((t) => t.id === +transactionId && t.delay)
         transaction ? transaction.delay = false : null; // Remove o atraso da transação
+
+        console.log("Limpa delay: " + (transaction ? transaction.id : "nenhum"));
       }
     })
   }
@@ -314,6 +326,9 @@ export class AppComponent {
         if (sharedLocks.length === 1) {
           this.lockManager[variable] = { transactionId: transaction.id, isShared: false };
           transaction.locks.add(variable);
+
+          console.log("Upgrade de bloqueio para exclusivo: " + transaction.id + variable);
+
           this.executionHistory.push({
             transactionId: transaction.id,
             action: ActionType.AcquireExclusiveLockUpgrade,
