@@ -2,6 +2,29 @@
 
 Lorenzo Bondan e Rafael Andreola
 
+## Oque é e para que serve o protocolo 2PL (Two-Phase Locking)
+
+O bloqueio 2PL é um protocolo de controle de concorrência usado em sistemas de gerenciamento de banco de dados para garantir a serialização das transações. 
+Ele é essencial para evitar problemas como condições de corrida e inconsistências nos dados.
+
+### Fases do Bloqueio 2PL
+1 - Fase de Crescimento (Growing Phase):
+Durante essa fase, uma transação pode adquirir (ou "bloquear") quantos bloqueios desejar em variáveis, mas não pode liberar nenhum bloqueio.
+A transação pode solicitar bloqueios compartilhados (para leitura) ou exclusivos (para escrita).
+A transação continua nesta fase até que decida realizar uma operação de commit ou abort.
+
+2 - Fase de Encolhimento (Shrinking Phase):
+Após a transação liberar seu primeiro bloqueio, entra na fase de encolhimento.
+Durante essa fase, a transação pode liberar bloqueios, mas não pode mais adquirir novos bloqueios.
+Uma vez que uma transação inicia a fase de encolhimento, ela não pode voltar à fase de crescimento.
+
+### Propriedades do 2PL
+**Serializabilidade**: O 2PL garante que o resultado da execução concorrente das transações seja equivalente a alguma execução serial (ou seja, que as transações sejam executadas uma após a outra).
+
+**Deadlock**: O 2PL pode levar a situações de deadlock, onde duas ou mais transações ficam esperando umas pelas outras para liberar os bloqueios. Mecanismos adicionais, como detecção e recuperação de deadlocks, são necessários para lidar com isso.
+
+**Eficácia**: Apesar de sua simplicidade e robustez, o 2PL pode ser menos eficiente em situações de alta concorrência, pois pode causar bloqueios prolongados.
+
 ## Descrição do Projeto
 
 Este projeto é uma aplicação Angular que simula um sistema de controle de concorrência de transações em um ambiente de banco de dados. Ele permite gerenciar transações, operações de leitura e escrita, além de simular bloqueios (locks) e identificar situações de deadlock. Cada transação realiza operações em variáveis específicas, e o sistema gerencia o bloqueio e liberação desses recursos, aplicando diferentes estratégias de bloqueio para garantir que as operações de leitura e escrita sejam executadas corretamente.
