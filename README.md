@@ -2,7 +2,7 @@
 
 Lorenzo Bondan e Rafael Andreola
 
-## Oque é e para que serve o protocolo 2PL (Two-Phase Locking)
+## O que é e para que serve o protocolo 2PL (Two-Phase Locking)
 
 O bloqueio 2PL é um protocolo de controle de concorrência usado em sistemas de gerenciamento de banco de dados para garantir a serialização das transações. 
 Ele é essencial para evitar problemas como condições de corrida e inconsistências nos dados.
