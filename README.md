@@ -15,7 +15,7 @@ A transação continua nesta fase até que decida realizar uma operação de com
 
 2 - Fase de Encolhimento (Shrinking Phase):
 Após a transação liberar seu primeiro bloqueio, entra na fase de encolhimento.
-Durante essa fase, a transação pode liberar bloqueios, mas não pode mais adquirir novos bloqueios.
+Durante essa fase, a transação só pode liberar bloqueios após o final da transação, mas não pode mais adquirir novos bloqueios.
 Uma vez que uma transação inicia a fase de encolhimento, ela não pode voltar à fase de crescimento.
 
 ### Propriedades do 2PL
